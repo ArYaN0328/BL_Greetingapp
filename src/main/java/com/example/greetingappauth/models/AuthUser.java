@@ -3,7 +3,7 @@ package com.example.greetingappauth.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-
+//UC1
 @Entity
 @Table(name = "users")
 @Getter
