@@ -39,4 +39,36 @@ public class AuthUser {
             message = "Password must contain at least one uppercase letter, one number, and one special character"
     )
     private String password;
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }
