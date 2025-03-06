@@ -20,12 +20,14 @@ public class AuthUserService {
     AuthUserRepository authUserRepository;
     BCryptPasswordEncoder bcrypt;
     JwtUtil jwtUtil;
+    private final EmailService emailService;
     @Autowired
-    public AuthUserService(AuthUserRepository authUserRepository,BCryptPasswordEncoder bcrpt,JwtUtil jwtUtil)
+    public AuthUserService(AuthUserRepository authUserRepository, BCryptPasswordEncoder bcrpt, JwtUtil jwtUtil, EmailService emailService)
     {
         this.authUserRepository=authUserRepository;
         this.bcrypt=bcrpt;
         this.jwtUtil=jwtUtil;
+        this.emailService = emailService;
     }
 
     public String registerUser(AuthUserDto authUserDto)
@@ -46,7 +48,18 @@ public class AuthUserService {
         user.setFirstName(authUserDto.getFirstName());
         authUserRepository.save(user);
 
+        // Send Welcome Email
+        String subject = "Welcome to Our Platform!";
+        String body = "<h3>Dear " + authUserDto.getFirstName() + ",</h3>"
+                + "<p>Thank you for registering with us!</p>"
+                + "<p>We're excited to have you onboard.</p>"
+                + "<p>Best regards, <br> Your Team</p>";
+
+        emailService.sendEmail(authUserDto.getEmail(), subject, body);
+
+
         return "User registered successfully";
+
 
 
 
@@ -62,10 +75,21 @@ public class AuthUserService {
 
         if(authOpt.isPresent())
         {
-            return jwtUtil.generateToken(lg.getEmail());
+            String token= jwtUtil.generateToken(lg.getEmail());
+            if(token.length()!=0)
+            {
+                // Send Login Alert Email
+                String subject = "Login Alert - Your Account";
+                String body = "<h3>Dear " + authOpt.get().getFirstName() + ",</h3>"
+                        + "<p>Your account was just accessed.</p>"
+                        + "<p>If this was not you, please reset your password immediately.</p>"
+                        + "<p>Best regards, <br> Lauda leleeee</p>";
+
+                emailService.sendEmail(authOpt.get().getEmail(), subject, body);
+                return "Login Successfull"+"/n"+token;
+            }
         }
-        else
-            return "Invalid email or password";
+        return "Invalid email or password";
     }
 
 
