@@ -92,15 +92,6 @@ public class AuthUserService {
         return "Invalid email or password";
     }
 
-  public String forgotpass(String email)
-  {
-      Optional<AuthUser> optionalAuthUser=authUserRepository.findByEmail(email);
-      if(optionalAuthUser.isPresent())
-      {
 
-
-      }
-      return "No user found";
-  }
 
 }
