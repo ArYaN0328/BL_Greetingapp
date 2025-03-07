@@ -26,4 +26,9 @@ public class AuthController {
     public ResponseEntity<String> loginUser(@Valid @RequestBody LoginDto loginDTO) {
         return ResponseEntity.ok(authService.loginUser(loginDTO));
     }
+    @GetMapping("/forgotpassword/{email}")
+    public String forgotpass(@RequestBody     @PathVariable String email)
+    {
+        return authService.forgotpass(email);
+    }
 }
