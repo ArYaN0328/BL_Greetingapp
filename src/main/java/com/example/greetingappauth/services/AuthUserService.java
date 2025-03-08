@@ -4,6 +4,7 @@ package com.example.greetingappauth.services;
 
 import com.example.greetingappauth.dtos.AuthUserDto;
 import com.example.greetingappauth.dtos.LoginDto;
+import com.example.greetingappauth.dtos.PasswordDto;
 import com.example.greetingappauth.models.AuthUser;
 import com.example.greetingappauth.repositories.AuthUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,31 @@ public class AuthUserService {
         }
         return "Invalid email or password";
     }
+
+    public String forgotpass(PasswordDto pass,String email)
+    {
+        Optional<AuthUser> optionalAuthUser=authUserRepository.findByEmail(email);
+        if(optionalAuthUser.isPresent())
+        {
+            AuthUser authUser=optionalAuthUser.get();
+            String hashpassword2=bcrypt.encode(pass.getPassword());
+            authUser.setPassword(hashpassword2);
+            authUserRepository.save(authUser);
+
+            String subject = "Password changed";
+            String body ="<p>Your account was just accessed.</p>"
+                    + "<p>Password changed successfully</p>"
+                    + "<p>Best regards</p>";
+
+            emailService.sendEmail(email, subject, body);
+            return "Password changed successfully";
+
+
+
+        }
+        return "User not found";
+    }
+
 
 
 
